@@ -34,6 +34,22 @@ RSpec.describe Calculator, "#run" do
     end
   end
 
+  it "exits when 'q' is entered" do
+    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+      enter("q", stdin, stdout)
+      sleep 0.1
+      expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+    end
+  end
+
+  xit "exits when end of file (\cD) is entered" do
+    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+      stdin.puts "\cD"
+      sleep 0.1
+      expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+    end
+  end
+
   def enter(value, stdin, stdout)
     stdin.puts value
     expect(stdout.gets.chomp).to match(/(?:> )?#{value}$/)

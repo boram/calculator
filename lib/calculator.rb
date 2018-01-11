@@ -1,4 +1,5 @@
 class Calculator
+  EXIT_CHAR_REGEX = /^[q|\cD]$/
   OPERATORS_REGEX = /^[\+\-\*\/]$/
 
   def initialize
@@ -9,7 +10,9 @@ class Calculator
     print "> "
 
     loop do
-      line = gets.chomp
+      line = gets
+
+      exit if (line =~ EXIT_CHAR_REGEX) || line.nil?
 
       if line =~ OPERATORS_REGEX
         reduce(line)
