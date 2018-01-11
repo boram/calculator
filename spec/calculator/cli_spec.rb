@@ -1,7 +1,7 @@
-require 'calculator'
+require 'calculator/cli'
 require 'pty'
 
-RSpec.describe Calculator, "#run" do
+RSpec.describe Calculator::CLI, "#run" do
   context "adds values" do
     it "entered in sequence" do
       PTY.spawn('bin/calculator') do |stdout, stdin, pid|
