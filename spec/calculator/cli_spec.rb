@@ -90,6 +90,16 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
+  context "when a non-number or non-operator is entered" do
+    it "returns an error message" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "1 &* foo bar baz 2 /"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/&* foo bar baz are not numbers or operators\./)
+      end
+    end
+  end
+
   def enter(value, stdin, stdout)
     stdin.puts value
     expect(stdout.gets.chomp).to match(/(?:> )?#{value}$/)

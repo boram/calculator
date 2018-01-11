@@ -1,4 +1,6 @@
+require 'calculator'
 require 'calculator/processor'
+require 'byebug'
 
 module Calculator
   class CLI
@@ -14,10 +16,15 @@ module Calculator
       loop do
         line = gets
         exit if (line =~ EXIT_CHAR_REGEX) || line.nil?
-        @processor.handle(line)
-        print "> "
+
+        begin
+          @processor.handle(line)
+        rescue Calculator::InvalidEntryError => e
+          puts e.message
+        ensure
+          print "> "
+        end
       end
     end
   end
-
 end
