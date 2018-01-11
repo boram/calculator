@@ -2,35 +2,75 @@ require 'calculator'
 require 'pty'
 
 RSpec.describe Calculator, "#run" do
-  it "adds" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      enter("1", stdin, stdout)
-      enter("2", stdin, stdout)
-      expect_output("+", "3.0", stdin, stdout)
+  context "adds values" do
+    it "entered in sequence" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("1", stdin, stdout)
+        enter("2", stdin, stdout)
+        expect_output("+", "3.0", stdin, stdout)
+      end
+    end
+
+    it "entered on one line" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "1 2 +"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/3\.0$/)
+      end
     end
   end
 
-  it "subtracts" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      enter("2", stdin, stdout)
-      enter("1", stdin, stdout)
-      expect_output("-", "1.0", stdin, stdout)
+  context "subtracts values" do
+    it "entered in sequence" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("2", stdin, stdout)
+        enter("1", stdin, stdout)
+        expect_output("-", "1.0", stdin, stdout)
+      end
+    end
+
+    it "entered on one line" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "2 1 -"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/1\.0$/)
+      end
     end
   end
 
-  it "multiplies" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      enter("2", stdin, stdout)
-      enter("3", stdin, stdout)
-      expect_output("*", "6.0", stdin, stdout)
+  context "multiplies values" do
+    it "entered in sequence" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("2", stdin, stdout)
+        enter("3", stdin, stdout)
+        expect_output("*", "6.0", stdin, stdout)
+      end
+    end
+
+    it "entered on one line" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "2 3 *"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/6\.0$/)
+      end
     end
   end
 
-  it "divides" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      enter("12", stdin, stdout)
-      enter("3", stdin, stdout)
-      expect_output("/", "4.0", stdin, stdout)
+  context "divides values " do
+    it "entered in sequence" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("12", stdin, stdout)
+        enter("3", stdin, stdout)
+        expect_output("/", "4.0", stdin, stdout)
+      end
+    end
+
+    it "entered on one line" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "12 3 /"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/4\.0$/)
+      end
     end
   end
 
@@ -60,5 +100,9 @@ RSpec.describe Calculator, "#run" do
     stdin.puts operator
     stdout.gets
     expect(stdout.gets.chomp).to match(/#{value}$/)
+  end
+
+  def clear_echoed_output(stdout)
+    stdout.gets
   end
 end
