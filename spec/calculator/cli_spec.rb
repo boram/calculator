@@ -74,6 +74,22 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
+  context "when chained operations are entered" do
+    it "continuously calculates values" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("12", stdin, stdout)
+        enter("3", stdin, stdout)
+        expect_output("/", "4.0", stdin, stdout)
+        enter("2", stdin, stdout)
+        expect_output("*", "8.0", stdin, stdout)
+        enter("7", stdin, stdout)
+        expect_output("-", "1.0", stdin, stdout)
+        enter("314159", stdin, stdout)
+        expect_output("+", "314160.0", stdin, stdout)
+      end
+    end
+  end
+
   context "when 'q' is entered" do
     it "exits" do
       PTY.spawn('bin/calculator') do |stdout, stdin, pid|
