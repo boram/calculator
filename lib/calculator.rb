@@ -1,4 +1,6 @@
 class Calculator
+  OPERATORS_REGEX = /^[\+\-\*\/]$/
+
   def initialize
     @stack = []
   end
@@ -9,8 +11,8 @@ class Calculator
     loop do
       line = gets.chomp
 
-      if line =~ /^\+$/
-        add
+      if line =~ OPERATORS_REGEX
+        reduce(line)
       else
         puts line
         @stack << line.to_f
@@ -22,8 +24,8 @@ class Calculator
 
   private
 
-  def add
-    @stack = [@stack.sum]
+  def reduce(operator)
+    @stack = [@stack.inject(operator)]
     puts @stack.first
   end
 end
