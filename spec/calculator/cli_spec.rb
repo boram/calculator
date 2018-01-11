@@ -56,7 +56,7 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
-  context "divides values " do
+  context "divides values" do
     it "entered in sequence" do
       PTY.spawn('bin/calculator') do |stdout, stdin, pid|
         enter("12", stdin, stdout)
@@ -74,19 +74,23 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
-  it "exits when 'q' is entered" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      enter("q", stdin, stdout)
-      sleep 0.1
-      expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+  context "when 'q' is entered" do
+    it "exits" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("q", stdin, stdout)
+        sleep 0.1
+        expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+      end
     end
   end
 
-  xit "exits when end of file (\cD) is entered" do
-    PTY.spawn('bin/calculator') do |stdout, stdin, pid|
-      stdin.puts "\cD"
-      sleep 0.1
-      expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+  context "when end of file (\cD) is entered" do
+    xit "exits" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "\cD"
+        sleep 0.1
+        expect(PTY.check(pid)).to be_a_kind_of(Process::Status)
+      end
     end
   end
 
