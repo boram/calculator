@@ -28,6 +28,16 @@ module Calculator
     end
 
     def reduce(operator)
+      if @stack.count <= 1
+        message = case @stack.count
+        when 0
+          "Please enter at least two values before performing an operation."
+        when 1
+          "Please enter one more value before performing an operation."
+        end
+        raise Calculator::InsufficientStackError.new(message)
+      end
+
       @stack = [@stack.inject(operator)]
       puts @stack.first
     end

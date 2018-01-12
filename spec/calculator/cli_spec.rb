@@ -120,6 +120,31 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
+  context "when no values are on the stack and an operator is entered" do
+    it "returns an error message" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "+"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(
+          /Please enter at least two values before performing an operation\./
+        )
+      end
+    end
+  end
+
+  context "when one value is on the stack and an operator is entered" do
+    it "returns an error message" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        enter("1", stdin, stdout)
+        stdin.puts "+"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(
+          /Please enter one more value before performing an operation\./
+        )
+      end
+    end
+  end
+
   def enter(value, stdin, stdout)
     stdin.puts value
     expect(stdout.gets.chomp).to match(/(?:> )?#{value}$/)
