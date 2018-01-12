@@ -9,7 +9,7 @@ module Calculator
 
     def handle(line)
       items = line.split(' ')
-      validate(items)
+      validate_input(items)
 
       if items.last =~ OPERATORS_REGEX
         operator = items.pop
@@ -28,21 +28,12 @@ module Calculator
     end
 
     def reduce(operator)
-      if @stack.count <= 1
-        message = case @stack.count
-        when 0
-          "Please enter at least two values before performing an operation."
-        when 1
-          "Please enter one more value before performing an operation."
-        end
-        raise Calculator::InsufficientStackError.new(message)
-      end
-
+      validate_stack(operator)
       @stack = [@stack.inject(operator)]
       puts @stack.first
     end
 
-    def validate(items)
+    def validate_input(items)
       errored_values = []
 
       items.each do |item|
@@ -60,6 +51,18 @@ module Calculator
         end
 
         raise Calculator::InvalidEntryError.new(message)
+      end
+    end
+
+    def validate_stack(operator)
+      if @stack.count <= 1
+        message = case @stack.count
+        when 0
+          "Please enter at least two values before performing an operation."
+        when 1
+          "Please enter one more value before performing an operation."
+        end
+        raise Calculator::InsufficientStackError.new(message)
       end
     end
   end
