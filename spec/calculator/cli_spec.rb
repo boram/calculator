@@ -74,6 +74,16 @@ RSpec.describe Calculator::CLI, "#run" do
     end
   end
 
+  context "when dividing by zero" do
+    it "returns 'Infinity'" do
+      PTY.spawn('bin/calculator') do |stdout, stdin, pid|
+        stdin.puts "1 0 /"
+        clear_echoed_output(stdout)
+        expect(stdout.gets.chomp).to match(/Dividing by zero is absurd\./)
+      end
+    end
+  end
+
   context "when chained operations are entered" do
     it "continuously calculates values" do
       PTY.spawn('bin/calculator') do |stdout, stdin, pid|

@@ -19,7 +19,8 @@ module Calculator
 
         begin
           @processor.handle(line)
-        rescue Calculator::InvalidEntryError,
+        rescue Calculator::DivideByZeroError,
+               Calculator::InvalidEntryError,
                Calculator::InsufficientStackError => e
           puts e.message
         ensure

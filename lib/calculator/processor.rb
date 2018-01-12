@@ -64,6 +64,10 @@ module Calculator
         end
         raise Calculator::InsufficientStackError.new(message)
       end
+
+      if @stack.last.zero?
+        raise Calculator::DivideByZeroError.new("Dividing by zero is absurd.")
+      end
     end
   end
 end
